@@ -1,41 +1,33 @@
 package musetest.disoul.com.musetest;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 
 
-public class MainActivity extends ActionBarActivity {
+public class ProvinceMapActivity extends ActionBarActivity {
 
-    //private static final String TAG = "MainActivity";
+    private static final String ARG_PROVINCE_NAME = "musetest.com.disoul.musetest.PROVINCE_NAME";
 
-    @OnClick(R.id.window)
-    protected void onWindowClick() {
-        ChinaMapActivity.launch(this);
-        this.finish();
+    public static void launch(final Context ctx, final String provinceName) {
+        Intent intent = new Intent(ctx, ProvinceMapActivity.class);
+        intent.putExtra(ARG_PROVINCE_NAME, provinceName);
+        ctx.startActivity(intent);
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
+        setContentView(R.layout.activity_province_map);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_province_map, menu);
         return true;
     }
 
