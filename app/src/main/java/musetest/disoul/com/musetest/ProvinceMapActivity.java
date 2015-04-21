@@ -75,7 +75,7 @@ public class ProvinceMapActivity extends ActionBarActivity {
                     return false;
                 }
                 Log.d(TAG,"cityname = "+cityName);
-                WuxiActivity.launch(this);
+                PanoramaActivity.launch(this);
                 this.finish();
                 return true;
         }
