@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="musetest.disoul.com.musetest.PanoramaActivity">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/nextStep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,5 +12,12 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+    <ImageView
+        android:id="@+id/prevStep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/prev_step"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

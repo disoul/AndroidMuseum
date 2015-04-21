@@ -2,37 +2,31 @@ package musetest.disoul.com.musetest;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.GpsStatus;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.panoramagl.PLImage;
-import com.panoramagl.PLJSONLoader;
 import com.panoramagl.PLSphericalPanorama;
 import com.panoramagl.PLView;
-import com.panoramagl.utils.PLUtils;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
 
 public class PanoramaActivity extends PLView {
 
     private final int MAX_IMG_ID = 14;
+    private final int MIN_IMG_ID = 2;
     private final String TAG = "PanoramaActivity";
 
     private int nextImgId = 2;
-    private int lastImgId = 0;
+    private int prevImgId = 0;
     private final GL10 gl10 = this.getCurrentGL();
 
     private PLSphericalPanorama panorama;
@@ -63,17 +57,19 @@ public class PanoramaActivity extends PLView {
         this.setPanorama(panorama);
         injectUI();
 
-        updatePanorama();
+        nextPanorama();
     }
 
-    private void updatePanorama(){
+    private void nextPanorama(){
         panorama.setImage(gl10, PLImageHelper.fromResourceIndex(this, nextImgId));
-        updateId();
+        prevImgId = nextImgId;
+        nextImgId++;
     }
 
-    private void updateId(){
-        lastImgId = nextImgId;
-        nextImgId++;
+    private  void prevPanorama(){
+        panorama.setImage(gl10, PLImageHelper.fromResourceIndex(this, prevImgId));
+        nextImgId--;
+        prevImgId--;
     }
 
     private void injectUI() {
@@ -88,11 +84,19 @@ public class PanoramaActivity extends PLView {
         container.addView(content, 0);
         root.addView(container);
 
-        ImageButton imageButton = (ImageButton)findViewById(R.id.nextStep);
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        ImageView nextStep = (ImageView)findViewById(R.id.nextStep);
+        nextStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bus.post(new NextImageEvent());
+            }
+        });
+
+        ImageView prevStep = (ImageView)findViewById(R.id.prevStep);
+        prevStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bus.post(new PrevImageEvent());
             }
         });
     }
@@ -100,8 +104,12 @@ public class PanoramaActivity extends PLView {
     public void onEventMainThread(final NextImageEvent e) {
         Log.d(TAG, "CLICK");
         if (nextImgId > MAX_IMG_ID) return;
-        updatePanorama();
-        updateId();
+        nextPanorama();
+    }
+
+    public void onEventMainThread(final PrevImageEvent e){
+        if (prevImgId < MIN_IMG_ID) return;
+        prevPanorama();
     }
 
     @Override
@@ -127,5 +135,9 @@ public class PanoramaActivity extends PLView {
     }
 
     public static class NextImageEvent {
+    }
+
+    public static class PrevImageEvent {
+
     }
 }
